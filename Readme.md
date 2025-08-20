@@ -28,7 +28,12 @@ The detector distinguishes adversarial examples from clean ones by leveraging ma
 
 ### 2.2. Purifier Module
 
-The purifier module is a denoising autoencoder based on a **DUNET architecture**, which extends U-Net with lateral connections between its encoder and decoder paths. This module, referred to as a High-level Representation Guided Denoiser (HGD), replaces the traditional pixel-level loss with a feature-reconstruction loss. This loss is calculated on the feature activations from a pre-trained target network, encouraging the preservation of semantic content.
+The purifier module is a denoising autoencoder designed to remove adversarial perturbations from an input image, restoring its clean representation.
+* **Core Architecture:** It utilizes a **DUNET**, an extension of the U-Net architecture, featuring an encoder-decoder structure with lateral skip connections. These connections prevent the loss of vital spatial information during reconstruction.
+* **High-Level Feature Guidance:** The purifier is trained not on pixel-level similarity but on a **feature-reconstruction loss**. This loss is calculated using the internal feature activations from a pre-trained classifier, forcing the denoised image to be semantically aligned with the clean image.
+* **Target Representation:** For the feature-wise loss, specific deep layers of the target classifiers are used to guide the purification. The experiments utilize the **Pre-FC2** feature layer for the MNIST classifier and the **Pre-FC3** feature layer for the CIFAR-10 classifier.
+* **Noise Estimation & Reconstruction:** The network's final layer is trained to output the negative of the estimated adversarial noise. This estimated negative noise is then added back to the original adversarial input to obtain the final, purified image.
+
 
 ---
 
